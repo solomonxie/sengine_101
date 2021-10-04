@@ -1,0 +1,5 @@
+BEGIN;
+
+DROP DATABASE sengine;
+
+COMMIT;

@@ -1,0 +1,5 @@
+BEGIN;
+
+CREATE DATABASE sengine;
+
+COMMIT;
