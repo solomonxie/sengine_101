@@ -34,6 +34,8 @@ Sqlite columns:
 
 
 There will be multiple JSON files for the same page:
-- Raw Response
-- Parsed HTML/Text
-- Page Meta
+- Raw Response -> to avoid loosing data
+- Parsed HTML/Text -> for search indexing
+- Page Meta -> for search indexing
+
+The reason not to put all info into same file is to consider the memory-wise cost.
