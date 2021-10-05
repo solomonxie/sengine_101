@@ -55,3 +55,5 @@ dkms.conf
 *.pyc
 celerybeat-schedule
 scraping/settings_local.py
+Makefile-local
+envfile-local
