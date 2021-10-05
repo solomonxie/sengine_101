@@ -44,23 +44,23 @@ minio-build:
 	#REF: https://min.io/download#/macos
 	#Server
 	mkdir -p ${MINIO_EXE_DIR} ||true
-	[[ ! -e ${MINIO_EXE_DIR}/minio ]] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/minio ||true
+	[ ! -e ${MINIO_EXE_DIR}/minio ] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/minio ||true
 	chmod +x ${MINIO_EXE_DIR}/minio ||true
 	#Client
-	[[ ! -e ${MINIO_EXE_DIR}/mc ]] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
+	[ ! -e ${MINIO_EXE_DIR}/mc ] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
 	chmod +x ${MINIO_EXE_DIR}/mc ||true
 
 minio-server:
 	@#PREPARE ENVIRONMENT
-	@[[ ! -z "${MINIO_ROOT_USER}" ]] || exit 128
-	@[[ ! -z "${MINIO_ROOT_PASSWORD}" ]] || exit 128
-	@[[ ! -z "${MINIO_MY_ACCESS_KEY}" ]] || exit 128
-	@[[ ! -z "${MINIO_MY_SECRET_KEY}" ]] || exit 128
-	@[[ ! -z "${MINIO_MY_STORAGE_DIR}" ]] || exit 128
+	@[ ! -z "${MINIO_ROOT_USER}" ] || exit 128
+	@[ ! -z "${MINIO_ROOT_PASSWORD}" ] || exit 128
+	@[ ! -z "${MINIO_MY_ACCESS_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_MY_SECRET_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_MY_STORAGE_DIR}" ] || exit 128
 	@mkdir -p ${MINIO_MY_STORAGE_DIR} ||true
 	nohup ${MINIO_EXE_DIR}/minio server ${MINIO_MY_STORAGE_DIR} --address "${MINIO_API_ADDR}" --console-address "${MINIO_WEB_CONSOLE_ADDR}" > ${MINIO_LOG_PATH} 2>&1 &
 	@echo "START RUNNING MINIO IN THE BACKGROUND..."
-	@#[[ "`uname -s`" = "Darwin" ]] && tail -f ${MINIO_LOG_PATH}  # Mac only
+	@#[ "`uname -s`" = "Darwin" ] && tail -f ${MINIO_LOG_PATH}  # Mac only
 	@echo "OK."
 
 minio-add-cred:
