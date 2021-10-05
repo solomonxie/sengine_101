@@ -1,14 +1,18 @@
 #!make
-include envfile-pub
+.PHONY: init
+include envfile
 include envfile-local
 
 #######################################################################
 #                     LOCAL DEVELOPMENT UTILITIES                     #
 #######################################################################
+init:
+	@bash init.sh
+
 set-env:
 	# For manuall debug in shell (not working in makefile, need to copy/paste manually)
 	# REF: https://zwbetz.com/set-environment-variables-in-your-bash-shell-from-a-env-file/
-	export $(grep -v '^#' ./envfile-pub | xargs) > /dev/null
+	export $(grep -v '^#' ./envfile | xargs) > /dev/null
 	export $(grep -v '^#' ./envfile-local | xargs) > /dev/null
 	@echo OK
 
