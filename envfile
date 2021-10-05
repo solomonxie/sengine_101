@@ -1,5 +1,6 @@
 #! envfile
 
+OS_ALIAS='ubuntu'
 MINIO_HOST_ALIAS=myminio
 MINIO_BUCKET_NAME=mybuck
 MINIO_API_ADDR=0.0.0.0:9000
@@ -11,3 +12,5 @@ MINIO_MY_SECRET_KEY=mysecret
 MINIO_MY_STORAGE_DIR=/myefs/db/minio
 MINIO_EXE_DIR=/myefs/bin
 MINIO_LOG_PATH=/myefs/log/minio.log
+MINIO_DOWNLOAD_URL=https://dl.min.io/server/minio/release/linux-amd64/minio
+MC_DOWNLOAD_URL=https://dl.min.io/client/mc/release/linux-amd64/mc
