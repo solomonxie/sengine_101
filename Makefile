@@ -7,12 +7,13 @@ include envfile-local
 #                     LOCAL DEVELOPMENT UTILITIES                     #
 #######################################################################
 root:
-	sudo su root
+	# sudo su root
+	echo "RUNNING IN root..."
 
-init: root
+init:
 	@bash init.sh
 
-set-env: root
+set-env:
 	# For manuall debug in shell (not working in makefile, need to copy/paste manually)
 	# REF: https://zwbetz.com/set-environment-variables-in-your-bash-shell-from-a-env-file/
 	export $(grep -v '^#' ./envfile | xargs) > /dev/null
@@ -49,7 +50,7 @@ minio-build:
 	[[ ! -e ${MINIO_EXE_DIR}/mc ]] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
 	chmod +x ${MINIO_EXE_DIR}/mc ||true
 
-minio-server: root
+minio-server:
 	@#PREPARE ENVIRONMENT
 	@[[ ! -z "${MINIO_ROOT_USER}" ]] || exit 128
 	@[[ ! -z "${MINIO_ROOT_PASSWORD}" ]] || exit 128
@@ -62,7 +63,7 @@ minio-server: root
 	@#[[ "`uname -s`" = "Darwin" ]] && tail -f ${MINIO_LOG_PATH}  # Mac only
 	@echo "OK."
 
-minio-add-cred: root
+minio-add-cred:
 	@#ADD HOST
 	@mc alias set ${MINIO_HOST_ALIAS}/ http://${MINIO_API_ADDR} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
 	@#ADD USER
@@ -72,7 +73,7 @@ minio-add-cred: root
 	@mc ls ${MINIO_HOST_ALIAS}
 	@echo "OK."
 
-minio-add-bucket: root
+minio-add-bucket:
 	#REF: https://docs.min.io/minio/baremetal/reference/minio-cli/minio-mc.html
 	mc mb -p ${MINIO_HOST_ALIAS}/${MINIO_BUCKET_NAME} ||true
 	mc ls ${MINIO_HOST_ALIAS}/${MINIO_BUCKET_NAME}
@@ -89,7 +90,7 @@ minio: minio-build minio-server minio-add-cred minio-add-bucket
 #REF: https://stackoverflow.com/questions/49762840/unable-to-mount-efs-on-ec2-instance-connection-timed-out-error
 #REF: https://www.youtube.com/watch?v=I9GO3mYeNAM
 #STEPS: CREATE EFS > SELECT SAME REGION & ZONE! > SELECT SAME SEC-GROUP > ADD NFS TO SEC-GROUP > ATTACH THROUGH CLI
-efs: root
+efs:
 	# PREPARE
 	apt install nfs-common -y
 	apt install python3-pip
@@ -119,7 +120,7 @@ efs: root
 #                              DATABASE                               #
 #######################################################################
 #REF: https://hub.docker.com/_/postgres
-pg: root
+pg:
 	yes| apt install pgcli
 	docker run --restart always \
 		--name pg \
@@ -131,7 +132,7 @@ pg: root
 		-d postgres postgres -c log_statement=all
 
 #REF: https://hub.docker.com/_/redis
-redis: root
+redis:
 	yes| apt install redis-tools
 	docker run --restart always \
 		--name rd \
@@ -141,7 +142,7 @@ redis: root
 		redis-server --appendonly yes
 
 #REF: https://hub.docker.com/_/mongo
-mongo: root
+mongo:
 	docker run --restart always \
 		--name mongo \
 		-p ${MONGO_PORT}:27017 \
@@ -151,7 +152,7 @@ mongo: root
 		-d mongo
 
 #REF: https://hub.docker.com/_/mysql
-mysql: root
+mysql:
 	mkdir /myefs/mysql
 	docker run --restart always \
 		--name mysql \
@@ -163,19 +164,19 @@ mysql: root
 		-e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 		mysql -h 0.0.0.0
 
-sqlite: root
+sqlite:
 	yes| apt install sqlite sqlite3
 	#REF: https://github.com/coleifer/sqlite-web
 	mkdir -p ${EFS_MOUNT_DIR}/sqlite ||true
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db > ${EFS_MOUNT_DIR}/log/sqlite.log 2>&1 &
 
-sqlite-web: root
+sqlite-web:
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db
 	#sqlite_web --host 0.0.0.0 --port 61591 ~/workspace/db/sqlite/mysqlite.db > /tmp/sqlite.log 2>&1 &
 
 
 
-nginx: root
+nginx:
 	yes| apt install nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/log/nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/share ||true
