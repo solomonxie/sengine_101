@@ -47,7 +47,7 @@ minio-build:
 	[ ! -e ${MINIO_EXE_DIR}/minio ] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/minio ||true
 	chmod +x ${MINIO_EXE_DIR}/minio ||true
 	#Client
-	[ ! -e ${MINIO_EXE_DIR}/mc ] && wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
+	[ ! -e ${MINIO_EXE_DIR}/mc ] && wget ${MC_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
 	chmod +x ${MINIO_EXE_DIR}/mc ||true
 
 minio-server:
@@ -65,6 +65,7 @@ minio-server:
 
 minio-add-cred:
 	@#ADD HOST
+	# REF: https://docs.min.io/minio/baremetal/reference/minio-cli/minio-mc/mc-alias.html
 	@mc alias set ${MINIO_HOST_ALIAS}/ http://${MINIO_API_ADDR} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
 	@#ADD USER
 	# REF: https://docs.min.io/minio/baremetal/reference/minio-cli/minio-mc-admin/mc-admin-user.html
