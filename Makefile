@@ -46,10 +46,10 @@ minio-build:
 	#REF: https://min.io/download#/macos
 	#Server
 	mkdir -p ${MINIO_EXE_DIR} ||true
-	wget https://dl.min.io/server/minio/release/linux-amd64/minio -O ${MINIO_EXE_DIR}/minio ||true
+	wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/minio ||true
 	chmod +x ${MINIO_EXE_DIR}/minio ||true
 	#Client
-	wget https://dl.min.io/client/mc/release/linux-amd64/mc -O ${MINIO_EXE_DIR}/mc ||true
+	wget ${MINIO_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
 	chmod +x ${MINIO_EXE_DIR}/mc ||true
 
 minio-server:
@@ -80,5 +80,6 @@ minio-add-bucket:
 	mc mb -p ${MINIO_HOST_ALIAS}/${MINIO_BUCKET_NAME} ||true
 	mc ls ${MINIO_HOST_ALIAS}/${MINIO_BUCKET_NAME}
 	@echo "OK."
+
 
 include Makefile-local
