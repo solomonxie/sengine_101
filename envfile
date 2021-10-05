@@ -1,6 +1,33 @@
 #! envfile
 
 OS_ALIAS='ubuntu'
+
+# EFS
+EFS_MOUNT_DIR=/myefs
+EFS_ID=fs-XXXXXXX
+EFS_ZONE=us-east-1
+
+# PG
+PG_PORT=5432
+PG_USER=admin
+PG_PASSWORD=password
+
+# Redis
+REDIS_PORT=6379
+
+# Mysql
+MYSQL_PORT=3306
+MYSQL_ROOT_PASSWORD=password
+MYSQL_DEFAULT_DB=demo
+MYSQL_USER=admin
+MYSQL_PASSWORD=password
+
+# MongoDB
+MONGO_PORT=8081
+MONGO_USER=admin
+MONGO_PASSWORD=password
+
+# MINIO
 MINIO_HOST_ALIAS=myminio
 MINIO_BUCKET_NAME=mybuck
 MINIO_API_ADDR=0.0.0.0:9000
