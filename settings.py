@@ -3,6 +3,8 @@ import os
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL') or ''
 CELERY_BACKEND_URL = os.environ.get('CELERY_BACKEND_URL') or ''
 
+AWS_S3_ENDPOINT = os.environ.get('AWS_S3_ENDPOINT') or ''
+AWS_S3_REGION = os.environ.get('AWS_S3_REGION') or ''
 AWS_S3_ACCESS_ID = os.environ.get('AWS_S3_ACCESS_ID') or ''
 AWS_S3_ACCESS_SECRET = os.environ.get('AWS_S3_ACCESS_SECRET') or ''
 AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME') or ''
