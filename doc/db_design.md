@@ -18,7 +18,7 @@ extra jsonb
 ```
 
 
-## Sqlite + JSON.gz
+## ~Sqlite + JSON.gz~
 
 The PG is not a good choice to store billions of page meta.
 So the solution can be:
