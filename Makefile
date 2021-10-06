@@ -1,7 +1,7 @@
 #!make
 .PHONY: init
 include envfile
-include envfile-local
+-include envfile-local
 
 #######################################################################
 #                     LOCAL DEVELOPMENT UTILITIES                     #
@@ -21,6 +21,14 @@ set-env:
 	@export $(grep -v '^#' ./envfile-local | xargs) > /dev/null
 	@echo "OK."
 
+test-env:
+	@[ ! -z "${MINIO_ROOT_USER}" ] || exit 128
+	@[ ! -z "${MINIO_ROOT_PASSWORD}" ] || exit 128
+	@[ ! -z "${MINIO_S3_ACCESS_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_S3_SECRET_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_MY_STORAGE_DIR}" ] || exit 128
+	@echo "OK, ENV READY."
+
 
 #######################################################################
 #                          CELERY TASK QUEUE                          #
@@ -35,7 +43,7 @@ hello-dispatch:
 hello-dispatch-periodic:
 	celery -A scraping.queue.hello beat
 
-hello-s3:
+hello-bucket:
 	python -m scraping.common.bucket_utils
 
 
@@ -43,7 +51,7 @@ hello-s3:
 #######################################################################
 #                        MINIO SELF HOSTED S3                         #
 #######################################################################
-minio-build:
+minio-build: test-env
 	#REF: https://min.io/download#/linux
 	#REF: https://min.io/download#/macos
 	#Server
@@ -56,12 +64,6 @@ minio-build:
 	@echo "OK."
 
 minio-server:
-	@#PREPARE ENVIRONMENT
-	@[ ! -z "${MINIO_ROOT_USER}" ] || exit 128
-	@[ ! -z "${MINIO_ROOT_PASSWORD}" ] || exit 128
-	@[ ! -z "${MINIO_S3_ACCESS_KEY}" ] || exit 128
-	@[ ! -z "${MINIO_S3_SECRET_KEY}" ] || exit 128
-	@[ ! -z "${MINIO_MY_STORAGE_DIR}" ] || exit 128
 	@mkdir -p ${MINIO_MY_STORAGE_DIR} ||true
 	nohup ${MINIO_EXE_DIR}/minio server ${MINIO_MY_STORAGE_DIR} --address "${MINIO_API_ADDR}" --console-address "${MINIO_WEB_CONSOLE_ADDR}" > ${MINIO_LOG_PATH} 2>&1 &
 	@echo "START RUNNING MINIO IN THE BACKGROUND..."
@@ -96,7 +98,7 @@ minio: minio-build minio-server minio-add-cred minio-add-bucket
 #REF: https://stackoverflow.com/questions/49762840/unable-to-mount-efs-on-ec2-instance-connection-timed-out-error
 #REF: https://www.youtube.com/watch?v=I9GO3mYeNAM
 #STEPS: CREATE EFS > SELECT SAME REGION & ZONE! > SELECT SAME SEC-GROUP > ADD NFS TO SEC-GROUP > ATTACH THROUGH CLI
-efs:
+efs: test-env
 	# PREPARE
 	apt install nfs-common -y
 	apt install python3-pip
@@ -127,7 +129,7 @@ efs:
 #                              DATABASE                               #
 #######################################################################
 #REF: https://hub.docker.com/_/postgres
-pg:
+pg: test-env
 	yes| apt install pgcli
 	docker run --restart always \
 		--name pg \
@@ -140,7 +142,7 @@ pg:
 	@echo "OK."
 
 #REF: https://hub.docker.com/_/redis
-redis:
+redis: test-env
 	yes| apt install redis-tools
 	docker run --restart always \
 		--name rd \
@@ -151,7 +153,7 @@ redis:
 	@echo "OK."
 
 #REF: https://hub.docker.com/_/mongo
-mongo:
+mongo: test-env
 	docker run --restart always \
 		--name mongo \
 		-p ${MONGO_PORT}:27017 \
@@ -162,7 +164,7 @@ mongo:
 	@echo "OK."
 
 #REF: https://hub.docker.com/_/mysql
-mysql:
+mysql: test-env
 	mkdir /myefs/mysql
 	docker run --restart always \
 		--name mysql \
@@ -175,20 +177,20 @@ mysql:
 		mysql -h 0.0.0.0
 	@echo "OK."
 
-sqlite:
+sqlite: test-env
 	yes| apt install sqlite sqlite3
 	#REF: https://github.com/coleifer/sqlite-web
 	mkdir -p ${EFS_MOUNT_DIR}/sqlite ||true
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db > ${EFS_MOUNT_DIR}/log/sqlite.log 2>&1 &
 	@echo "OK."
 
-sqlite-web:
+sqlite-web: test-env
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db
 	#sqlite_web --host 0.0.0.0 --port 61591 ~/workspace/db/sqlite/mysqlite.db > /tmp/sqlite.log 2>&1 &
 	@echo "OK."
 
 
-nginx:
+nginx: test-env
 	yes| apt install nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/log/nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/share ||true
