@@ -16,10 +16,10 @@ logger = getLogger(__name__)
 SESSION_MAKER = {0: None}
 
 
-def create_sqlalchemy_engine():
+def create_sqlalchemy_engine(conn_url):
     assert bool(settings.PG_CONN_URL), 'PG CONNECTION URL IS EMPTY...'
     engine = sqlalchemy.create_engine(
-        settings.PG_CONN_URL,
+        conn_url,
         echo=True,
         # isolation_level='AUTOCOMMIT',  # IMPORTANT: R/O USER SHOULD HAVE THIS
         poolclass=QueuePool,
@@ -39,7 +39,7 @@ def get_session_maker():
         return SESSION_MAKER[0]
 
     logger.info('Creating new SQLALchemy Engine...')
-    engine = create_sqlalchemy_engine()
+    engine = create_sqlalchemy_engine(settings.PG_CONN_URL)
     maker = sessionmaker(bind=engine, autocommit=True)
     SESSION_MAKER[0] = maker
     return maker

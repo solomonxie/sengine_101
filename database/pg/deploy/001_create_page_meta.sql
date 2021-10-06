@@ -17,8 +17,8 @@ CREATE TABLE page_meta (
     keywords jsonb,
     sub_links jsonb,
     extra jsonb,
-    create_date timestamp default timezone('UTC'::text, now()),
-    update_date timestamp default timezone('UTC'::text, now()),
+    created_time timestamp default timezone('UTC'::text, now()),
+    updated_time timestamp default timezone('UTC'::text, now()),
 
     PRIMARY KEY (mid)
 );
