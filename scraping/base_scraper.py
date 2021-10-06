@@ -1,9 +1,8 @@
 class BaseScraper:
-    def __init__(self, url):
-        assert url not in ['', None], 'SHOULD GIVE URL'
-        self.url = url
+    def __init__(self):
+        pass
 
-    def start(self):
+    def scrape(self, url):
         pass
 
 

@@ -57,3 +57,4 @@ celerybeat-schedule
 settings_local.py
 Makefile-local
 envfile-*
+deploy/redis-local.conf

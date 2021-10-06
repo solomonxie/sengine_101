@@ -1,7 +1,9 @@
 #!make
-.PHONY: init
+# .PHONY: prepare
 include envfile
 -include envfile-local
+
+TARGET: prepare
 
 #######################################################################
 #                     LOCAL DEVELOPMENT UTILITIES                     #
@@ -10,7 +12,7 @@ root:
 	# sudo su root
 	echo "RUNNING IN root..."
 
-init:
+prepare:
 	@bash init.sh
 	@echo "OK."
 
@@ -33,19 +35,28 @@ test-env:
 #######################################################################
 #                          CELERY TASK QUEUE                          #
 #######################################################################
-hello-worker:
+hi-worker:
 	celery -A scraping.queue.hello worker -E --loglevel=INFO
 
-hello-dispatch:
+hi-dispatch:
 	python -m scraping.queue.hello
 
 
-hello-dispatch-periodic:
+hi-dispatch-periodic:
 	celery -A scraping.queue.hello beat
 
-hello-bucket:
+hi-bucket:
 	python -m scraping.common.bucket_utils
 
+
+#######################################################################
+#                               SCRAPER                               #
+#######################################################################
+hi-scrape:
+	python -m scraping.general_scraper
+
+hi-redis:
+	python -m scraping.common.redis_utils
 
 
 #######################################################################
@@ -151,6 +162,11 @@ redis: test-env
 		-d redis:alpine \
 		redis-server --appendonly yes
 	@echo "OK."
+
+redis-mac:
+	[ ! -x $(command -v redis-server) ] && brew install redis ||true
+	[ -x $(command -v redis-server) ] && brew services stop redis ||true
+	redis-server ./deploy/redis-local.conf
 
 #REF: https://hub.docker.com/_/mongo
 mongo: test-env
