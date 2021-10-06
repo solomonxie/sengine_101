@@ -1,7 +1,7 @@
 import boto3
 from logging import getLogger
 
-from scraping import settings
+import settings
 
 logger = getLogger(__name__)
 
