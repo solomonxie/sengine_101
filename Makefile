@@ -164,8 +164,8 @@ redis: test-env
 	@echo "OK."
 
 redis-mac:
-	[ ! -x $(command -v redis-server) ] && brew install redis ||true
-	[ -x $(command -v redis-server) ] && brew services stop redis ||true
+	@[ ! -x $(command -v redis-server) ] && brew install redis ||true
+	@[ -x $(command -v redis-server) ] && brew services stop redis ||true
 	redis-server ./deploy/redis-local.conf
 
 #REF: https://hub.docker.com/_/mongo

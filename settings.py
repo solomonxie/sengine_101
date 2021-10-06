@@ -30,6 +30,7 @@ SCRAPER_HEADERS = {
     "sec-fetch-user": "?1",
     "upgrade-insecure-requests": "1",
     "cookie": "GeoIP=US:CA:Los_Angeles:34.05:-118.25:v4; WMF-Last-Access=06-Oct-2021; WMF-Last-Access-Global=06-Oct-2021",
+    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36"
 }
 
 try:
