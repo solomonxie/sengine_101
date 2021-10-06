@@ -84,7 +84,6 @@ class S3Bucket:
 
 
 def main():
-    __import__('pudb').set_trace()
     s3 = S3Bucket()
     result = s3.list_files()
     print(result)
