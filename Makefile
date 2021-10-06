@@ -25,15 +25,15 @@ set-env:
 #######################################################################
 #                          CELERY TASK QUEUE                          #
 #######################################################################
-hello-task-worker:
-	celery -A scraping.queue.tasks worker -E --loglevel=INFO
+hello-worker:
+	celery -A scraping.queue.hello worker -E --loglevel=INFO
 
 hello-dispatch:
-	python -m scraping.queue.tasks
+	python -m scraping.queue.hello
 
 
 hello-dispatch-periodic:
-	celery -A scraping.queue.tasks beat
+	celery -A scraping.queue.hello beat
 
 hello-s3:
 	python -m scraping.common.bucket_utils
