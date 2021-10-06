@@ -10,6 +10,7 @@ from celery.schedules import crontab
 import settings
 
 T = Celery(__name__, broker=settings.CELERY_BROKER_URL, backend=settings.CELERY_BACKEND_URL)
+T.conf.result_expires = 60
 
 
 @T.task(name='hello')
