@@ -2,7 +2,7 @@ class BaseScraper:
     def __init__(self):
         pass
 
-    def scrape(self, url):
+    def start(self, url):
         pass
 
 

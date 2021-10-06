@@ -20,9 +20,11 @@ EFS_ID=fs-XXXXXXX
 EFS_ZONE=us-east-1
 
 # PG
+PG_HOST=127.0.0.1
 PG_PORT=5432
 PG_USER=admin
 PG_PASSWORD=password
+PG_CONN_URL=postgresql+psycopg2://admin:password@127.0.0.1:5432/mydb
 
 # Redis
 REDIS_HOST=127.0.0.1

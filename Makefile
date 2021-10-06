@@ -13,7 +13,7 @@ root:
 	echo "RUNNING IN root..."
 
 prepare:
-	@bash init.sh
+	@bash prepare.sh
 	@echo "OK."
 
 set-env:
@@ -141,7 +141,7 @@ efs: test-env
 #######################################################################
 #REF: https://hub.docker.com/_/postgres
 pg: test-env
-	yes| apt install pgcli
+	@yes| apt install pgcli
 	docker run --restart always \
 		--name pg \
 		-p ${PG_PORT}:5432 \
