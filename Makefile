@@ -54,8 +54,8 @@ minio-server:
 	@#PREPARE ENVIRONMENT
 	@[ ! -z "${MINIO_ROOT_USER}" ] || exit 128
 	@[ ! -z "${MINIO_ROOT_PASSWORD}" ] || exit 128
-	@[ ! -z "${MINIO_MY_ACCESS_KEY}" ] || exit 128
-	@[ ! -z "${MINIO_MY_SECRET_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_S3_ACCESS_KEY}" ] || exit 128
+	@[ ! -z "${MINIO_S3_SECRET_KEY}" ] || exit 128
 	@[ ! -z "${MINIO_MY_STORAGE_DIR}" ] || exit 128
 	@mkdir -p ${MINIO_MY_STORAGE_DIR} ||true
 	nohup ${MINIO_EXE_DIR}/minio server ${MINIO_MY_STORAGE_DIR} --address "${MINIO_API_ADDR}" --console-address "${MINIO_WEB_CONSOLE_ADDR}" > ${MINIO_LOG_PATH} 2>&1 &
@@ -69,7 +69,7 @@ minio-add-cred:
 	@mc alias set ${MINIO_HOST_ALIAS}/ http://${MINIO_API_ADDR} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
 	@#ADD USER
 	# REF: https://docs.min.io/minio/baremetal/reference/minio-cli/minio-mc-admin/mc-admin-user.html
-	@mc admin user add ${MINIO_HOST_ALIAS} ${MINIO_MY_ACCESS_KEY} ${MINIO_MY_SECRET_KEY}
+	@mc admin user add ${MINIO_HOST_ALIAS} ${MINIO_S3_ACCESS_KEY} ${MINIO_S3_SECRET_KEY}
 	@#TEST
 	@mc ls ${MINIO_HOST_ALIAS}
 	@echo "OK."
