@@ -16,6 +16,9 @@ AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME') or ''
 # Redis
 SCRAPER_REDIS_URL = os.environ.get('SCRAPER_REDIS_URL') or ''
 
+# PG
+PG_CONN_URL = os.environ.get('PG_CONN_URL') or ''
+
 SCRAPER_HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "accept-language": "en,zh-CN;q=0.9,zh;q=0.8,en-US;q=0.7,en-GB;q=0.6,zh-HK;q=0.5,zh-TW;q=0.4",
