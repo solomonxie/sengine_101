@@ -1,3 +1,5 @@
+import re
+import urllib
 import requests
 import tldextract
 
@@ -12,15 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_domain_from_url(url: str):
-    # o = urllib.parse.urlparse(url)
-    # domain = o.netloc
     o = tldextract.extract(str(url).strip())
     domain = '{}.{}'.format(o.domain, o.suffix)
     return domain
 
 
-def increase_visit_count(url, count=1):
-    domain = get_domain_from_url(url)
+def increase_visit_count(domain, count=1):
     r = redis_utils.get_redis_connection()
     k = 'rate_limit__{}'.format(domain)
     r.incr(k, count)
@@ -28,25 +27,44 @@ def increase_visit_count(url, count=1):
 
 
 def scrape(url: str, headers: dict = None):
-    links = ['https://www.google.com']
     assert bool(url), 'SHOULD GIVE URL'
-    increase_visit_count(url, 2)
+    domain = get_domain_from_url(url)
+    increase_visit_count(domain, 2)
 
-    __import__('pudb').set_trace()
     resp = requests.head(url, headers=headers)
     assert resp.status_code == 200, 'Failed scraping target with status[{}]: {}'.format(resp.status_code, url)
     assert 'html' in str(resp.headers.get('content-type')), 'Target is not HTML page'
 
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, 'Failed scraping target with status[{}]: {}'.format(resp.status_code, url)
-    # links = extract_links(resp.content)
+    links = extract_links(url, resp.content)
     return links
 
 
-def extract_links(html: str):
+def extract_links(url: str, html: str):
     """ Store in DB for schedular to dispatch to more individual tasks """
     assert bool(html), 'HTML should not be empty'
-    links = []
+    sources = re.findall('href="([^"]*)"', str(html))
+    o = urllib.parse.urlparse(url)
+    links = set()
+    for href in sources:
+        if href.startswith('http'):
+            links.add(href)
+        elif href.startswith('//'):
+            x = o.scheme + ':' + href
+        elif href.startswith('/'):
+            x = o.scheme + '://' + o.netloc + href
+        elif not href.startswith('/'):
+            x = o.scheme + '://' + href
+        else:
+            x = href
+        try:
+            obj = urllib.parse.urlparse(x)
+            assert bool(obj.netloc or obj.path)
+            links.add(obj.geturl())
+        except Exception:
+            pass
+
     return links
 
 
