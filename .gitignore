@@ -56,4 +56,4 @@ dkms.conf
 celerybeat-schedule
 settings_local.py
 Makefile-local
-envfile-local
+envfile-*
