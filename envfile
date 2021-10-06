@@ -1,5 +1,6 @@
 #! envfile
 
+ENV_ALIAS=public
 OS_ALIAS=ubuntu
 
 # CELERY
