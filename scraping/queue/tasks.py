@@ -7,7 +7,7 @@ import time
 from celery import Celery
 from celery.schedules import crontab
 
-from scraping import settings
+import settings
 from scraping.general_scraper import GeneralScraper
 
 T = Celery(__name__, broker=settings.CELERY_BROKER_URL, backend=settings.CELERY_BACKEND_URL)
