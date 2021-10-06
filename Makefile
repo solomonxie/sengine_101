@@ -12,27 +12,31 @@ root:
 
 init:
 	@bash init.sh
+	@echo "OK."
 
 set-env:
 	# For manuall debug in shell (not working in makefile, need to copy/paste manually)
 	# REF: https://zwbetz.com/set-environment-variables-in-your-bash-shell-from-a-env-file/
-	export $(grep -v '^#' ./envfile | xargs) > /dev/null
-	export $(grep -v '^#' ./envfile-local | xargs) > /dev/null
-	@echo OK
+	@export $(grep -v '^#' ./envfile | xargs) > /dev/null
+	@export $(grep -v '^#' ./envfile-local | xargs) > /dev/null
+	@echo "OK."
 
 
 #######################################################################
 #                          CELERY TASK QUEUE                          #
 #######################################################################
-task-worker:
+hello-task-worker:
 	celery -A scraping.queue.tasks worker -E --loglevel=INFO
 
-dispatch-hello:
+hello-dispatch:
 	python -m scraping.queue.tasks
 
 
-dispatch-periodic-hello:
+hello-dispatch-periodic:
 	celery -A scraping.queue.tasks beat
+
+hello-s3:
+	python -m scraping.common.bucket_utils
 
 
 
@@ -49,6 +53,7 @@ minio-build:
 	#Client
 	[ ! -e ${MINIO_EXE_DIR}/mc ] && wget ${MC_DOWNLOAD_URL} -O ${MINIO_EXE_DIR}/mc ||true
 	chmod +x ${MINIO_EXE_DIR}/mc ||true
+	@echo "OK."
 
 minio-server:
 	@#PREPARE ENVIRONMENT
@@ -115,6 +120,7 @@ efs:
 	mkdir -p ${EFS_MOUNT_DIR}/bin
 	touch ${EFS_MOUNT_DIR}/README.txt
 	wget http://speedtest-nyc1.digitalocean.com/100mb.test -O ${EFS_MOUNT_DIR}/100mb.test
+	@echo "OK."
 
 
 #######################################################################
@@ -131,6 +137,7 @@ pg:
 		-e POSTGRES_USER=${PG_USER} \
 		-e POSTGRES_PASSWORD=${PG_PASSWORD} \
 		-d postgres postgres -c log_statement=all
+	@echo "OK."
 
 #REF: https://hub.docker.com/_/redis
 redis:
@@ -141,6 +148,7 @@ redis:
 		-v ${EFS_MOUNT_DIR}/redis:/data \
 		-d redis:alpine \
 		redis-server --appendonly yes
+	@echo "OK."
 
 #REF: https://hub.docker.com/_/mongo
 mongo:
@@ -151,6 +159,7 @@ mongo:
 		-e MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD} \
 		-v ${EFS_MOUNT_DIR}/mongo:/data/db \
 		-d mongo
+	@echo "OK."
 
 #REF: https://hub.docker.com/_/mysql
 mysql:
@@ -164,17 +173,19 @@ mysql:
 		-e MYSQL_USER=${MYSQL_USER} \
 		-e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 		mysql -h 0.0.0.0
+	@echo "OK."
 
 sqlite:
 	yes| apt install sqlite sqlite3
 	#REF: https://github.com/coleifer/sqlite-web
 	mkdir -p ${EFS_MOUNT_DIR}/sqlite ||true
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db > ${EFS_MOUNT_DIR}/log/sqlite.log 2>&1 &
+	@echo "OK."
 
 sqlite-web:
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db
 	#sqlite_web --host 0.0.0.0 --port 61591 ~/workspace/db/sqlite/mysqlite.db > /tmp/sqlite.log 2>&1 &
-
+	@echo "OK."
 
 
 nginx:
@@ -185,3 +196,4 @@ nginx:
 	cp ./deploy/efs_nginx.conf /etc/nginx/nginx.conf
 	service nginx restart
 	service nginx status
+	@echo "OK."

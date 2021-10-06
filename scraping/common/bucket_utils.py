@@ -13,8 +13,10 @@ class S3Exception(Exception):
 def get_s3_client():
     client = boto3.client(
         's3',
-        aws_access_key_id=settings.AWS_ACCESS_ID,
-        aws_secret_access_key=settings.AWS_ACCESS_SECRET,
+        aws_access_key_id=settings.AWS_S3_ACCESS_ID,
+        aws_secret_access_key=settings.AWS_S3_ACCESS_SECRET,
+        endpoint_url=settings.AWS_S3_ENDPOINT,
+        region_name=settings.AWS_S3_REGION,
     )
     return client
 
@@ -22,8 +24,10 @@ def get_s3_client():
 def get_s3_resource():
     resource = boto3.resource(
         's3',
-        aws_access_key_id=settings.AWS_ACCESS_ID,
-        aws_secret_access_key=settings.AWS_ACCESS_SECRET,
+        aws_access_key_id=settings.AWS_S3_ACCESS_ID,
+        aws_secret_access_key=settings.AWS_S3_ACCESS_SECRET,
+        endpoint_url=settings.AWS_S3_ENDPOINT,
+        region_name=settings.AWS_S3_REGION,
     )
     return resource
 
@@ -32,7 +36,7 @@ class S3Bucket:
     def __init__(self, bucket=''):
         self.resource = get_s3_resource()
         self.client = get_s3_client()
-        self.bucket = bucket or settings.BUCKET_NAME
+        self.bucket = bucket or settings.AWS_S3_BUCKET_NAME
 
     def upload_blob(self, s3_path: str, blob: str):
         try:
@@ -77,3 +81,14 @@ class S3Bucket:
         else:
             keys = [obj.key for obj in self.resource.Bucket(self.bucket).objects.all()]
         return keys
+
+
+def main():
+    __import__('pudb').set_trace()
+    s3 = S3Bucket()
+    result = s3.list_files()
+    print(result)
+
+
+if __name__ == '__main__':
+    main()
