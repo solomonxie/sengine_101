@@ -59,7 +59,7 @@ hi-redis:
 	python -m scraping.common.redis_utils
 
 hi-db:
-	python -m scraping.common.sqlalchemy_utils
+	python -m scraping.common.db_utils
 
 
 #######################################################################
