@@ -16,6 +16,8 @@ AWS_S3_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME') or ''
 # Redis
 SCRAPER_REDIS_URL = os.environ.get('SCRAPER_REDIS_URL') or ''
 
+PAGE_META_DB_TYPE = 'sqlite'
+
 # PG
 PG_CONN_URL = os.environ.get('PG_CONN_URL') or ''
 

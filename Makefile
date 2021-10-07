@@ -45,21 +45,25 @@ hi-dispatch:
 hi-dispatch-periodic:
 	celery -A scraping.queue.hello beat
 
-hi-bucket:
-	python -m scraping.common.bucket_utils
-
-
-#######################################################################
-#                               SCRAPER                               #
-#######################################################################
-hi-scrape:
+do-scrape:
 	python -m scraping.general_scraper
 
+
+do-dispatch:
+	python -m scraping.queue.tasks
+
+
+#######################################################################
+#                               DATABASE                              #
+#######################################################################
 hi-redis:
 	python -m scraping.common.redis_utils
 
 hi-db:
 	python -m scraping.common.db_utils
+
+hi-bucket:
+	python -m scraping.common.bucket_utils
 
 
 #######################################################################

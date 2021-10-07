@@ -3,5 +3,5 @@ GET_UNSCRAPED_LINKS = """
 """
 
 GET_NEW_LINKS = """
-    SELECT url FROM page_meta WHERE url IN (%s)
+    SELECT url FROM page_meta WHERE url NOT IN (%s)
 """
