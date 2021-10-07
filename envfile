@@ -28,6 +28,7 @@ PG_PASSWORD=password
 PG_CONN_URL=postgresql+psycopg2://admin:password@127.0.0.1:5432/mydb
 
 # Sqlite
+SQLITE_DB_PATH=/path/to/database.db
 SQLITE_CONN_URL=sqlite:////path/to/database.db
 
 # Redis

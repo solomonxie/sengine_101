@@ -8,8 +8,7 @@
 -- -------------------------------------------------------------
 
 
-DROP TABLE IF EXISTS "link_map";
-CREATE TABLE "link_map" (
+CREATE TABLE IF NOT EXISTS "link_map" (
     "id" integer,
     "state" integer NOT NULL DEFAULT '0',
     "url" varchar NOT NULL,

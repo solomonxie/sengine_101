@@ -1,13 +1,13 @@
 BEGIN;
 
-CREATE SEQUENCE page_meta_id_seq
+CREATE SEQUENCE IF NOT EXISTS "page_meta_id_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
 
-CREATE TABLE page_meta (
+CREATE TABLE IF NOT EXISTS "page_meta" (
     mid integer DEFAULT nextval('page_meta_id_seq'::regclass) NOT NULL,
     url character varying(3000),
     state integer DEFAULT 0,
