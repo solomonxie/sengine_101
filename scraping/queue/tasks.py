@@ -38,7 +38,6 @@ def start_scraping(url):
 
     # 2. Start scraping
     scraper = GeneralScraper()
-    __import__('pudb').set_trace()
     scraper.start(url)
 
     # 3. Change db state to 2
