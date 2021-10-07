@@ -9,12 +9,12 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-def get_session(db_type: str = 'sqlite'):
+def get_session(db_type: str = settings.PAGE_META_DB_TYPE):
     session = None
-    if db_type == 'sqlite':
-        session = get_scoped_session(settings.SQLITE_CONN_URL)
-    elif db_type == 'pg':
+    if db_type == 'pg':
         session = get_scoped_session(settings.PG_CONN_URL)
+    else:
+        session = get_scoped_session(settings.SQLITE_CONN_URL)
     return session
 
 
