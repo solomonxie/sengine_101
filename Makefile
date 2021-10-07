@@ -58,6 +58,12 @@ hi-scrape:
 hi-redis:
 	python -m scraping.common.redis_utils
 
+hi-pg:
+	python -m scraping.common.pg_utils
+
+hi-db:
+	python -m scraping.common.sqlalchemy_utils
+
 
 #######################################################################
 #                        MINIO SELF HOSTED S3                         #

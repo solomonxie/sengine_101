@@ -5,7 +5,7 @@ import tldextract
 
 import settings
 from database.models import pg_models
-from scraping.common import pg_utils
+from scraping.common import db_utils
 from scraping.common import redis_utils
 from scraping.base_scraper import BaseScraper
 
@@ -76,7 +76,7 @@ def save_links(links: list):
             state=0
         ) for x in links
     ]
-    with pg_utils.get_context_session() as session:
+    with db_utils.get_session('sqlite') as session:
         session.begin()
         session.add_all(records)
         session.commit()
