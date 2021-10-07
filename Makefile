@@ -143,7 +143,7 @@ efs: test-env
 #                              DATABASE                               #
 #######################################################################
 #REF: https://hub.docker.com/_/postgres
-pg: test-env
+pg-server: test-env
 	@yes| apt install pgcli
 	docker run --restart always \
 		--name pg \
@@ -155,8 +155,15 @@ pg: test-env
 		-d postgres postgres -c log_statement=all
 	@echo "OK."
 
+pg-deploy: test-env
+	# FIXME: NOT WORKING YET...
+	cp ./database/pg/deploy/001_create_page_meta.sql ${EFS_MOUNT_DIR}/pg/
+	docker exec -u ${PG_USER} pg psql createdb mydb
+	docker exec -u ${PG_USER} pg psql mydb ${PG_USER} -f /var/lib/postgresql/data/001_create_page_meta.sql
+	@echo "OK."
+
 #REF: https://hub.docker.com/_/redis
-redis: test-env
+redis-server: test-env
 	yes| apt install redis-tools
 	docker run --restart always \
 		--name rd \
@@ -166,13 +173,13 @@ redis: test-env
 		redis-server --appendonly yes
 	@echo "OK."
 
-redis-mac:
+redis-server-mac:
 	@[ ! -x $(command -v redis-server) ] && brew install redis ||true
 	@[ -x $(command -v redis-server) ] && brew services stop redis ||true
 	redis-server ./deploy/redis-local.conf
 
 #REF: https://hub.docker.com/_/mongo
-mongo: test-env
+mongo-server: test-env
 	docker run --restart always \
 		--name mongo \
 		-p ${MONGO_PORT}:27017 \
@@ -183,7 +190,7 @@ mongo: test-env
 	@echo "OK."
 
 #REF: https://hub.docker.com/_/mysql
-mysql: test-env
+mysql-server: test-env
 	mkdir /myefs/mysql
 	docker run --restart always \
 		--name mysql \
@@ -196,20 +203,19 @@ mysql: test-env
 		mysql -h 0.0.0.0
 	@echo "OK."
 
-sqlite: test-env
+sqlite-server: test-env
 	yes| apt install sqlite sqlite3
 	#REF: https://github.com/coleifer/sqlite-web
 	mkdir -p ${EFS_MOUNT_DIR}/sqlite ||true
 	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db > ${EFS_MOUNT_DIR}/log/sqlite.log 2>&1 &
 	@echo "OK."
 
-sqlite-web: test-env
-	sqlite_web --host 0.0.0.0 --port 61591 ${EFS_MOUNT_DIR}/sqlite/mysqlite.db
-	#sqlite_web --host 0.0.0.0 --port 61591 ~/workspace/db/sqlite/mysqlite.db > /tmp/sqlite.log 2>&1 &
+sqlite-deploy: test-env
+	cat ./database/sqlite/deploy/001_create_link_map.sql |sqlite3 ${SQLITE_DB_PATH}
 	@echo "OK."
 
 
-nginx: test-env
+nginx-server: test-env
 	yes| apt install nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/log/nginx ||true
 	mkdir -p ${EFS_MOUNT_DIR}/share ||true
