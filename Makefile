@@ -50,7 +50,7 @@ do-scrape:
 
 
 do-dispatch:
-	python -m scraping.queue.tasks
+	celery -A scraping.queue.tasks beat
 
 
 #######################################################################
