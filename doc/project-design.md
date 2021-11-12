@@ -11,14 +11,17 @@ TODO:
 - [ ] BaiduPan share links searching
 
 
-## Inventory
+## Tech Stack
 
-Inventory:
+Stack:
 - [ ] EC2 ==> Main host
-- [ ] EBS + S3 ==> As elastic cloud storage
+- [ ] EFS + S3 ==> As elastic cloud storage
 - [ ] MongoDB (container on EC2) ==> As document storage
 - [ ] Redis (container on EC2) ==> As Message Queue & request rate limiter
 - [ ] Postgres (container on EC2) ==> For Indexing
+- [ ] Serverless
+    - [ ] Lambda
+    - [ ] Step Functions
 
 
 ## Architecture | Tech Stach
